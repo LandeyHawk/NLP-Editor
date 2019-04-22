@@ -1,0 +1,19 @@
+﻿
+  例子：用户输入“我喜欢吃新疆水果”
+  
+  1.关键词单元激活做法：
+    
+    @喜欢+@水果|compliment_eatFruit_httppost=clear_active
+ 
+  2.监听action激活做法：
+    
+    小红[NA]喜欢[1]吃[2]新疆[3]水果[4]|1=+喜欢~#visitorname,rule-compliment-eatFruit,[4].
+    
+name=compliment_beauty_listening
+status=listening
+action=select
+condition=ask|#visitorname,rule-compliment-eatFruit,?|你喜欢吃新疆水果吗？|#visitorname喜欢吃新疆水果。=+喜欢
+process=completed=true|compliment_beauty_httppost=clear_active|
+
+
+

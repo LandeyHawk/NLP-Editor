@@ -1,0 +1,9 @@
+﻿name=compliment_fruit_httppost
+status=waiting
+action=select
+style=interrupt
+condition=end|#visitorname,rule-compliment-fruit-end,?|谢谢呀，你买的西瓜真好吃！| 结束此话题。=结束
+process=completed=true
+
+
+

@@ -1,0 +1,12 @@
+﻿请在钉盘下载以下内容
+Xmind：结构图绘制软件
+Sublime Text：文本编辑器
+Visual Studio Code：文本编辑器
+gethub：版本整合工具
+
+
+网页工具：
+树形图生成工具：http://vault.sz.chewrobot.com:28081/deptree/
+齐悟编辑器：http://aliyun-hz2.chewrobot.com/km/login_ch.php
+	    http://qcloud-cd1.chewrobot.com/km/login_ch.php
+齐悟控制台：https://robot-service.centaurstech.com/users/login?s_url=http%3A%2F%2Frobot-service.centaurstech.com%2F

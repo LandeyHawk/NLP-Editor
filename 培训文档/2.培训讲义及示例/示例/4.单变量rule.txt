@@ -1,0 +1,3 @@
+﻿原句：我买了10斤西瓜
+    我[NA]买[1]了[NA]10[2]斤[3]西瓜[4]|4=+西瓜~#visitorname,rule-find-fruitweight,[2].
+    变量对:（visitorname,10）

@@ -1,0 +1,17 @@
+﻿1.表示rule两端变量的两大区域
+    
+    a. 得了感冒能吃西瓜吗？
+       变量：“感冒”“西瓜”
+       rule-ji2bing4-shui3guo3
+    b. 新疆出产西瓜吗？
+       变量：“新疆”“西瓜”
+       rule-di4qu1-shui3guo3
+
+  2.描述两个关键词之间的关系
+
+    a. 芒果会导致过敏吗？
+       变量：“芒果”“过敏”
+       rule-find-dao3zhi4
+    b. 为什么患感冒？
+       变量：“患”“感冒”
+       rule-find-yuan2yin4

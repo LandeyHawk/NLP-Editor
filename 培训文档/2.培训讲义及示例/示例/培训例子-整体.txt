@@ -1,0 +1,326 @@
+﻿两个引擎地址
+http://cn.aipioneer.com/km
+http://robot-engine-test.centaurstech.com/km
+两个树形图生成工具地址
+http://cn.aipioneer.com:18000/
+http://robot-engine-test.centaurstech.com:18000/
+
+
+
+
+
+语义提取  P8、P10
+  例子1：
+    原句：小红想吃西瓜
+    分词后：小红[1]想[2]吃[3]西瓜[4]
+    语义关系：#[1],rule-eat-fruit,[4].
+    变量对：[小红，西瓜]
+
+ 
+
+
+
+rule的命名  P14
+  1.表示rule两端变量的两大区域
+    
+    a. 得了感冒能吃西瓜吗？
+       变量：“感冒”“西瓜”
+       rule-jibing-shuiguo
+    b. 新疆出产西瓜吗？
+       变量：“新疆”“西瓜”
+       rule-diqu-shuiguo
+
+  2.描述两个关键词之间的关系
+
+    a. 芒果会导致过敏吗？
+       变量：“芒果”“过敏”
+       rule-find-daozhi
+    b. 为什么患感冒？
+       变量：“患”“感冒”
+       rule-find-yuanyin
+
+
+
+
+
+rule的书写  P16
+  1.一般情况
+    原句：得了感冒能吃西瓜吗？
+    QA:得[1]了[NA]感冒[2]能[3]吃[4]西瓜[5]吗[NA]？|1=+得+有+患上,2=++疾病,5=++水果~#[2],rule-jibing-shuiguo,[5]. 
+  2.词后面不加[NA]也不加[数字]，如下面“导致”。
+    原句：芒果导致过敏。
+    芒果[1]导致过敏[2]~#[1],rule-find-daozhi,[2].
+
+
+
+
+
+单变量rule  P17
+    原句：我买了10斤西瓜
+    我[NA]买[1]了[NA]10[2]斤[3]西瓜[4]|4=+西瓜~#visitorname,rule-find-fruitweight,[2].
+    变量对:（visitorname,10）
+
+
+
+
+
+双变量rule  P19
+    原句：我买了10斤西瓜
+    我[NA]买[1]了[NA]10[2]斤[3]西瓜[4]|4=+西瓜~#[3],rule-find-fruitweight,[2].
+    变量对：（斤,10）
+
+
+
+
+
+QA疑问句写法  P20
+
+#rules
+西瓜[1]怎么[2]切[3]。|2=+怎么~#visitorname,rule-find-listening,[1].
+QA:西瓜[1]怎么[2]切[3]。|2=+怎么~#visitorname,rule-find-listening,[1].
+西瓜[1]是[NA]如何[3]生长[4]的[NA]。|4=+生长~#visitorname,rule-find-listening,[1].
+QA:西瓜[1]是[NA]如何[3]生长[4]的[NA]。|4=+生长~#visitorname,rule-find-listening,[1].
+ 
+#actions
+name=business
+action=select
+status=waiting
+condition=ask|#visitorname,rule-find-business,?|这里是business。|
+process=completed=true
+
+name=testing
+action=select
+status=listening
+condition=ask|#visitorname,rule-find-listening,?|这里是listening。|rule已被识别。=+西瓜
+process=ask=+西瓜|business=active|实现跳转。
+ 
+
+
+
+
+不连接后台的action  P25  
+
+#rules
+小红[1]想[4]买[2]西瓜[3]。|4=+想+要,3=+西瓜+葡萄+草莓+苹果+芒果+橙子~#[1],rule-want-buy,[3].
+小红[1]想[4]买[2]两[5]个[6]。|4=+想+要,6=+个+斤~#visitorname,rule-find-weight,[6].
+小红[1]想[4]买[2]两[5]个[6]西瓜[3]。|4=+想+要,6=+个+斤,3=+西瓜+葡萄+草莓+苹果+芒果+橙子~#visitorname,rule-find-weight,[6].~#[1],rule-want-buy,[3].
+
+
+#actions
+name=business
+status=active
+action=select
+style=order
+condition=ask|#visitorname,rule-want-buy,?|您好！这里是齐悟水果店，您想买什么水果呢？西瓜、葡萄、草莓、苹果？|#visitorname想买[]。=+西瓜+葡萄+草莓+苹果
+process=ask=+西瓜|watermelon_business=active|您真会吃，我们这儿的西瓜又大又甜呢。
+process=ask=+葡萄|grapes_business=active|好的，新疆吐鲁番葡萄是个很好的选择。
+process=ask=+草莓|strawberry_business=active|草莓刚好卖完了。
+process=ask=+苹果|apple_business=active|苹果要到后天才有。
+
+name=watermelon_business
+status=waiting
+action=select
+condition=ask|#visitorname,rule-find-weight,?|你想要买多少呢？|[]=+个+斤+none
+process=ask=+个+斤+none|weight_business=active|好的，稍等！
+
+name=mango_business
+status=listening
+action=select
+condition=ask|#visitorname,rule-want-buy,?||#visitorname要买[]=+芒果+橙子
+process=ask=+芒果|mango_business=active|这个季节吃芒果很不错哦!
+process=ask=+橙子|oranges_business=active|我们的橙子很新鲜。
+
+
+
+
+
+
+连接后台的action  P29 
+
+#rules
+香蕉[1]还[NA]有[2]很多[3]。|1=+橙子+香蕉+葡萄+西瓜+苹果~#[1],rule-panduan,[3].
+橙子[1]应该是[2]不错的选择[3]。|1=+橙子+香蕉+葡萄+西瓜+苹果~#[1],rule-jianyi,[3].
+
+#actions
+name=business_httppost
+
+action=select
+status=active
+style=order
+
+condition=actionA::1|她,rule-pingjia,?|小红漂亮吗?|她很漂亮。=+漂亮+美丽
+condition=actionB|#visitorname,rule-xunwen,?|小红喜欢吃什么水果？|她喜欢吃西瓜。=+西瓜+苹果
+
+reference=actionC|?,rule-panduan,多|香蕉多吗？|香蕉还有很多。=+香蕉
+reference=actionD|#visitorname,rule-jianyi,?|你应该多吃富含维生素C的水果|橙子应该是不错的选择。=+橙子
+
+process=nextStep=actionA|actionA_httppost=active|
+process=nextStep=actionB|actionB_httppost=active|
+process=nextStep=actionC|actionC_httppost=active|
+process=nextStep=actionD|actionD_httppost=active| 
+
+
+
+
+
+    
+Location、Time、Number   P30
+
+#rules  
+QA:你[1]要[2]几[3]个[4]西瓜[5]？|5=+西瓜+葡萄+苹果+草莓~#visitorname,rule-find-amount,[5].
+    
+#actions
+name=fruitstore_httppost
+status=active
+action=select
+style=order
+condition=stock:location|#visitorname,rule-find-stock,?|西瓜从哪个城市进货？|西瓜从[]进货。
+condition=time:time|#visitorname,rule-find-time,?|西瓜什么时候到货？|西瓜[]到货。
+reference=amount:number|#visitorname,rule-find-amount,?|你要几个西瓜？|#visitorname想要[]个西瓜。
+process=nextStep=stock|stock_httppost=clear_active|
+process=nextStep=time|time_httppost=clear_active|
+process=nextStep=amount|amount_httppost=clear_active|
+
+    
+    
+      
+    
+    
+激活闲聊话题的方法  P31 
+
+  例子：用户输入“我喜欢吃新疆水果”
+  
+  1.关键词单元激活做法：
+    
+    @喜欢+@水果|compliment_eatFruit_httppost=clear_active
+ 
+  2.监听action激活做法：
+    
+    小红[NA]喜欢[1]吃[2]新疆[3]水果[4]|1=+喜欢~#visitorname,rule-compliment-eatFruit,[4].
+    
+name=compliment_beauty_listening
+status=listening
+action=select
+condition=ask|#visitorname,rule-compliment-eatFruit,?|你喜欢吃新疆水果吗？|#visitorname喜欢吃新疆水果。=+喜欢
+process=completed=true|compliment_beauty_httppost=clear_active|
+
+
+
+
+
+分岔话题  P32 你 rule？？？
+
+话题1：
+#rules
+
+
+    
+#actions
+name=business_httppost
+
+action=select
+status=active
+style=interrupt
+condition=businessA|#visitorname,rule-xunwen,?|小红喜欢吃什么水果？|她喜欢吃西瓜。=+西瓜+苹果
+reference=businessB|?,rule-panduan,多|香蕉多吗？|香蕉还有很多。=+香蕉
+
+reference=businessC|#visitorname,rule-jianyi,?|你应该多吃富含维生素C的水果|橙子应该是不错的选择。=+橙子
+process=completed=true|business_httppost=clear_active|
+process=nextStep=actionA|actionA_httppost=active|
+process=nextStep=actionB|actionB_httppost=active|
+process=nextStep=actionC|actionC_httppost=active|
+process=nextStep=actionD|actionD_httppost=active|
+...（此处省略更多）
+
+话题2：
+#actions
+name=business_httppost
+
+action=select
+status=active
+style=interrupt
+
+condition=businessA|#visitorname,rule-xunwen,?|小红喜欢吃什么水果？|她喜欢吃西瓜。=+西瓜+苹果
+process=completed=true|business_httppost=clear_active|
+process=nextStep=actionA|actionA_httppost=active|
+process=nextStep=actionB|actionB_httppost=active|
+
+process=nextStep=actionC|actionC_httppost=active|
+
+process=nextStep=actionD|actionD_httppost=active|
+...（此处省略更多）
+
+    
+    
+
+
+
+
+简单话题   P34
+    
+name=compliment_fruit_httppost
+status=waiting
+action=select
+style=interrupt
+condition=end|#visitorname,rule-compliment-fruit-end,?|谢谢呀，你买的西瓜真好吃！|结束此话题。=结束
+process=completed=true
+
+
+
+
+话题说明及示例   P35
+    
+#rules
+我[1]喜欢[2]葡萄[3]|3=+西瓜+葡萄+苹果+草莓~#[2],rule-fav-fruit,[3].
+
+#actions
+name=ask_fav_fruit
+action=select
+status=active
+condition=fav_fruit::1|#visitorname,rule-fav-fruit,?|你喜欢什么水果？|#visitorname喜欢[]。=+西瓜+葡萄
+process=fav_fruit=西瓜|watermelon_topic=active|
+process=fav_fruit=葡萄|grape_topic=active|
+
+name=fav_fruit_listen
+action=select
+status=listening
+conflict=ask_fav_fruit,fruit_topic_httppost,grape_topic
+condition=fav_fruit|#visitorname,rule-fav-fruit,?|你喜欢什么水果？|#visitorname喜欢[]。=+西瓜+葡萄
+process=fav_fruit=西瓜|watermelon_topic=clear_active|
+process=fav_fruit=葡萄|grape_topic=clear_active|
+
+name=watermelon_topic
+action=select
+status=waiting
+condition=any1::1|#visitorname,rule-any,?|西瓜是夏季最受欢迎的水果|#visitorname任意回答。=+none
+process=completed=true|ask_fav_fruit=clear_active|西瓜话题结束。
+
+name=grape_topic
+action=select
+status=waiting
+condition=any2::1|#visitorname,rule-any,?|我也喜欢葡萄|#visitorname 任意回答。=+none
+process=completed=true|ask_fav_fruit=clear_active|葡萄话题结束。
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

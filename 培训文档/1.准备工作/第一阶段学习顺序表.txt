@@ -1,0 +1,13 @@
+1 先了解智库的大概框架，主要分为语义，rule和action
+
+2 先学习语义提取（参考用时：3h），知识库编辑讲义V1.2版7-12页的内容；注册引擎账号并登录；登录方法看知识库编辑文档V1.1版本的第2章内容（第1章可忽略）；
+两个引擎地址
+http://aliyun-hz2.chewrobot.com/km/login_ch.php
+http://qcloud-cd1.chewrobot.com/km/login_ch.php
+两个树形图生成工具地址
+http://vault.sz.chewrobot.com:28081/deptree/
+http://192.168.1.250:17000/deptree/
+完成智能先锋机器人引擎课后练习[1]的训练题
+
+
+3 学习rule规则的编写（参考用时5h）；重点看知识库编辑讲义推理规则单元，完成对应作业
